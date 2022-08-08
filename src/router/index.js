@@ -1,26 +1,43 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
-  },
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    name: "core",
+    component: () => import("../../src/layouts/CoreLayout"),
+    meta: {
+      title: "Главная",
+    },
+    redirect: { name: "currency-list" },
+    children: [
+      {
+        path: "/currency-list",
+        name: "currency-list",
+        component: () => import("../../src/pages/CurrencyListIndex"),
+        meta: {
+          title: "Список валют",
+        },
+      },
+      {
+        path: "/converter",
+        name: "converter",
+        component: () => import("../../src/pages/ConverterIndex"),
+        meta: {
+          title: "Главная",
+        },
+      },
+    ],
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach(async (to) => {
+  document.title =
+    "Eclipse Digital" + (to?.meta?.title ? " - " + to.meta.title : "");
 });
 
 export default router;
