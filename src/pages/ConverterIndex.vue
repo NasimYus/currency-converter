@@ -1,4 +1,11 @@
-<template><div>converter</div></template>
+<template>
+  <div class="converter-card">
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</template>
 
 <script setup></script>
 
