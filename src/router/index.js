@@ -23,7 +23,7 @@ const routes = [
         name: "converter",
         component: () => import("../../src/pages/ConverterIndex"),
         meta: {
-          title: "Главная",
+          title: "Конвертер",
         },
       },
     ],
