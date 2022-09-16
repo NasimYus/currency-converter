@@ -1,12 +1,16 @@
 <template>
   <div class="list-item">
-    <div class="list-item-main">
-      <span>{{ mainCurrency }} {{ mainCharCode }}</span>
-    </div>
+    <span class="main">{{ mainCurrency }} {{ mainCharCode }}</span>
     <button @click="changeCurrency">&harr;</button>
-    <div class="list-item-sub">
-      <span>{{ subCurrency }} {{ subCharCode }}</span>
-    </div>
+    <span class="sub">{{ subCurrency }} {{ subCharCode }}</span>
+    <span>
+      <span
+        :class="isPreviousGreatest ? 'value-status-down' : 'value-status-up'"
+      >
+        {{ isPreviousGreatest ? " ▼" : " ▲" }}
+        {{ getValuteChanges(valute.Value, valute.Previous) }}
+      </span>
+    </span>
   </div>
 </template>
 
@@ -19,6 +23,12 @@ const mainCurrency = ref(props.valute.Nominal);
 const mainCharCode = ref(props.valute.CharCode);
 const subCurrency = ref(props.valute.Value);
 const subCharCode = ref("RUB");
+const isPreviousGreatest = ref(!!(props.valute.Previous > props.valute.Value));
+
+function getValuteChanges(current, previous) {
+  let valueChanges = current - previous;
+  return Number.parseFloat(valueChanges).toFixed(2);
+}
 
 function changeCurrency() {
   mainCharCode.value === "RUB"
@@ -39,11 +49,18 @@ function changeCurrency() {
 .list-item {
   display: flex;
   font-size: 25px;
-  .list-item-main {
+  .main {
     margin-right: 5px;
   }
-  .list-item-sub {
+  .sub {
     margin-left: 5px;
+  }
+
+  .value-status-up {
+    color: green;
+  }
+  .value-status-down {
+    color: red;
   }
 
   button {
