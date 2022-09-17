@@ -23,14 +23,31 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref, watch } from "vue";
+import { computed, defineAsyncComponent, ref, watch } from "vue";
 import { debounce } from "@/utils/debounce";
+import { useStore } from "vuex";
+const store = useStore();
 
-const currencyList = ref([]);
-const currencyListCopy = ref([]);
-const loading = ref(false);
 const searchText = ref("");
-getCurrencyList();
+const currencyListCopy = ref([]);
+const currencyList = ref([]);
+
+const loading = computed(() => {
+  return store.state.loading;
+});
+
+const storeCurrencyList = computed(() => {
+  return JSON.parse(JSON.stringify(store.state.currencyList));
+});
+
+watch(
+  storeCurrencyList,
+  function (value) {
+    currencyList.value = value;
+    currencyListCopy.value = JSON.parse(JSON.stringify(currencyList.value));
+  },
+  { immediate: true }
+);
 
 watch(
   () => searchText.value,
@@ -46,27 +63,6 @@ watch(
     }
   }, 500)
 );
-
-/**
- * Method to get currency data
- * @returns {Promise<void>}
- */
-
-async function getCurrencyList() {
-  loading.value = true;
-  const url = "https://www.cbr-xml-daily.ru/daily_json.js";
-  let response = await fetch(url);
-  if (response.ok) {
-    let json = await response.json();
-    currencyList.value = json;
-    currencyList.value.Valute = Object.values(currencyList.value.Valute);
-
-    currencyListCopy.value = JSON.parse(JSON.stringify(currencyList.value));
-    loading.value = false;
-  } else {
-    console.log("Ошибка HTTP: " + response.status);
-  }
-}
 
 const CurrencyListItem = defineAsyncComponent(() =>
   import("../components/CurrencyListItem")
