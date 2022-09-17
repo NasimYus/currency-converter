@@ -4,6 +4,9 @@
 ```
 npm install
 ```
+npm run lint
+
+```
 
 ### Compiles and hot-reloads for development
 ```
