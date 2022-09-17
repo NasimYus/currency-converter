@@ -1,40 +1,22 @@
 <template>
-  <section class="container">
+  <section>
     <div class="converter-card">
       <h1>Конвертер валют</h1>
       <div class="card-body" v-if="loading">Загрузка...</div>
       <div v-else class="card-body">
-        <div class="base-block">
-          <div class="input-wrapper">
-            <select v-model="baseValute" name="baseValutes" id="baseValutes">
-              <option :value="baseValute">
-                {{ baseValute.CharCode }}
-              </option>
-              <option
-                v-for="valute in storeCurrencyList.Valute"
-                :key="valute.ID"
-                :value="valute"
-              >
-                {{ valute.CharCode }}
-              </option>
-            </select>
-            <input
-              v-model="baseValuteInput"
-              placeholder="100"
-              type="number"
-              inputmode="number"
-            />
-          </div>
-        </div>
-        <button @click="changeInputsValue">&harr;</button>
-        <div class="secondary-block">
-          <input
-            v-model="secondaryValuteInput"
-            type="text"
-            placeholder="100.0000"
-            inputmode="text"
-            readonly
-          />
+        <div class="currency-list-wrapper">
+          <select v-model="baseValute" name="baseValutes" id="baseValutes">
+            <option :value="baseValute">
+              {{ baseValute.CharCode }}
+            </option>
+            <option
+              v-for="valute in storeCurrencyList.Valute"
+              :key="valute.ID"
+              :value="valute"
+            >
+              {{ valute.CharCode }}
+            </option>
+          </select>
           <select
             name="secondaryValutes"
             id="secondaryValutes"
@@ -51,6 +33,28 @@
               {{ valute.CharCode }}
             </option>
           </select>
+        </div>
+        <div class="converter-wrapper">
+          <div class="base-block">
+            <div class="input-wrapper">
+              <input
+                v-model="baseValuteInput"
+                placeholder="100"
+                type="number"
+                inputmode="number"
+              />
+            </div>
+          </div>
+          <button @click="changeInputsValue">&harr;</button>
+          <div class="secondary-block">
+            <input
+              v-model="secondaryValuteInput"
+              type="text"
+              placeholder="100.0000"
+              inputmode="text"
+              readonly
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -87,7 +91,7 @@ const loading = computed(() => {
 });
 
 const storeCurrencyList = computed(() => {
-  return JSON.parse(JSON.stringify(store.state.currencyList));
+  return store.state.currencyList;
 });
 
 watch([baseValute, secondaryValute], () => {
@@ -119,20 +123,53 @@ function changeInputsValue() {
 </script>
 
 <style scoped lang="scss">
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .converter-card {
-    width: 600px;
-    height: 300px;
-    margin-top: 50px;
-    border: 1px solid black;
+.converter-card {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #d7d3d3;
+  border-radius: 8px;
+  background-color: #f7f8f9;
 
-    .card-body {
-      padding: 20px;
+  .card-body {
+    padding: 20px;
+
+    .currency-list-wrapper {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+
+    .converter-wrapper {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+    }
+
+    input,
+    select {
+      border: 1px solid #e5eaef;
+      outline: 0;
+      padding: 10px 20px;
+      background: #ffffff;
+      border-radius: 4px;
+      font-size: 18px;
+      line-height: 150%;
+      color: #222222;
+    }
+
+    button {
+      background: #222222;
+      border-radius: 4px;
+      color: #fff;
+      border: 0;
+      padding: 6px 10px;
+      font-size: 18px;
+      line-height: 22px;
+      margin: 0 10px;
+      cursor: pointer;
+      &:hover {
+        background-color: #605f5f;
+      }
     }
   }
 }

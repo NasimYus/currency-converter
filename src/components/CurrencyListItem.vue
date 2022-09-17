@@ -26,29 +26,30 @@ const subCharCode = ref("RUB");
 const isPreviousGreatest = ref(!!(props.valute.Previous > props.valute.Value));
 
 function getValuteChanges(current, previous) {
-  let valueChanges = current - previous;
-  return Number.parseFloat(valueChanges).toFixed(2);
+  const valueChanges = current - previous;
+  return parseFloat(valueChanges).toFixed(2);
 }
 
 function changeCurrency() {
-  mainCharCode.value === "RUB"
-    ? ((mainCurrency.value = props.valute.Nominal),
-      (mainCharCode.value = props.valute.CharCode),
-      (subCurrency.value = props.valute.Value),
-      (subCharCode.value = "RUB"))
-    : ((mainCharCode.value = "RUB"),
-      (subCharCode.value = props.valute.CharCode),
-      (mainCurrency.value = props.valute.Nominal),
-      (subCurrency.value = (props.valute.Nominal / props.valute.Value).toFixed(
-        4
-      )));
+  if (mainCharCode.value === "RUB") {
+    mainCurrency.value = props.valute.Nominal;
+    mainCharCode.value = props.valute.CharCode;
+    subCurrency.value = props.valute.Value;
+    subCharCode.value = "RUB";
+  } else {
+    mainCharCode.value = "RUB";
+    subCharCode.value = props.valute.CharCode;
+    mainCurrency.value = props.valute.Nominal;
+    subCurrency.value = (props.valute.Nominal / props.valute.Value).toFixed(4);
+  }
 }
 </script>
 
 <style scoped lang="scss">
 .list-item {
   display: flex;
-  font-size: 25px;
+  align-items: center;
+  font-size: 20px;
   .main {
     margin-right: 5px;
   }
@@ -64,14 +65,17 @@ function changeCurrency() {
   }
 
   button {
-    background-color: #ccc;
+    background: #222222;
+    border-radius: 4px;
+    color: #fff;
     border: 0;
-    border-radius: 50%;
-    padding: 5px;
+    padding: 6px 10px;
+    font-size: 18px;
+    line-height: 22px;
     margin: 0 5px;
     cursor: pointer;
     &:hover {
-      background-color: #a19d9d;
+      background-color: #605f5f;
     }
   }
 }
