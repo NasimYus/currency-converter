@@ -4,4 +4,9 @@
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<script setup>
+import { useStore } from "vuex";
+
+const store = useStore();
+store.dispatch("getCurrencyList");
+</script>
