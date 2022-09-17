@@ -5,7 +5,6 @@ export default createStore({
     currencyList: null,
     loading: false,
   },
-  getters: {},
   mutations: {
     SET_CURRENCY_LIST(state, currencyList) {
       state.currencyList = currencyList;
@@ -24,15 +23,16 @@ export default createStore({
       commit("SET_LOADING", true);
       const url = "https://www.cbr-xml-daily.ru/daily_json.js";
       let response = await fetch(url);
-      if (response.ok) {
-        let json = await response.json();
-        json.Valute = Object.values(json.Valute);
-        commit("SET_CURRENCY_LIST", json);
-        commit("SET_LOADING", false);
-      } else {
+
+      if (!response.ok) {
         console.log("Ошибка HTTP: " + response.status);
+        return;
       }
+
+      let json = await response.json();
+      json.Valute = Object.values(json.Valute);
+      commit("SET_CURRENCY_LIST", json);
+      commit("SET_LOADING", false);
     },
   },
-  modules: {},
 });

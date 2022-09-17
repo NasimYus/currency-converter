@@ -1,9 +1,8 @@
 <template>
-  <section class="container">
+  <section class="currency-list">
     <div class="search-text">
-      <label for="">Поиск</label>
       <input
-        placeholder="название валюты"
+        placeholder="Поиск названия валюты..."
         type="text"
         inputmode="text"
         v-model="searchText"
@@ -11,14 +10,14 @@
       />
     </div>
     <h1>Список валют</h1>
-    <section v-if="loading">Загрузка...</section>
-    <section v-else>
+    <div v-if="loading">Загрузка...</div>
+    <div v-else>
       <ul v-for="valute in currencyList.Valute" :key="valute.ID">
         <li>
           <currency-list-item :valute="valute" />
         </li>
       </ul>
-    </section>
+    </div>
   </section>
 </template>
 
@@ -37,12 +36,22 @@ const loading = computed(() => {
 });
 
 const storeCurrencyList = computed(() => {
-  return JSON.parse(JSON.stringify(store.state.currencyList));
+  return store.state.currencyList;
 });
 
 watch(
+  currencyList,
+  (value) => {
+    if (!value?.Value?.length && !searchText.value.length) {
+      currencyList.value = JSON.parse(JSON.stringify(storeCurrencyList.value));
+    }
+  },
+  { immediate: true }
+);
+
+watch(
   storeCurrencyList,
-  function (value) {
+  (value) => {
     currencyList.value = value;
     currencyListCopy.value = JSON.parse(JSON.stringify(currencyList.value));
   },
@@ -70,13 +79,20 @@ const CurrencyListItem = defineAsyncComponent(() =>
 </script>
 
 <style scoped lang="scss">
-.container {
-  margin: 10px 55px;
-
+.currency-list {
   .search-text {
     font-size: 20px;
-    label {
-      margin-right: 10px;
+    input {
+      border: 1px solid #e5eaef;
+      outline: 0;
+      display: inline-block;
+      width: 300px;
+      padding: 10px 20px;
+      background: transparent;
+      border-radius: 4px;
+      font-size: 18px;
+      line-height: 150%;
+      color: #222222;
     }
   }
   h1 {
