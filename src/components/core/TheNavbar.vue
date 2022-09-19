@@ -4,7 +4,7 @@
       <li>
         <router-link
           class="list-item-button"
-          :class="isActive === 'currency-list' ? 'active' : ''"
+          :class="activeTab === 'currency-list' ? 'active' : ''"
           :to="{ name: 'currency-list' }"
           @click="changeActiveButton('currency-list')"
           role="a"
@@ -14,7 +14,7 @@
       </li>
       <li>
         <router-link
-          :class="isActive === 'converter' ? 'active' : ''"
+          :class="activeTab === 'converter' ? 'active' : ''"
           class="list-item-button"
           :to="{ name: 'converter' }"
           @click="changeActiveButton('converter')"
@@ -29,11 +29,12 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRoute } from "vue-router/dist/vue-router";
 
-const isActive = ref("currency-list");
-
+const route = useRoute();
+const activeTab = ref(route.name);
 function changeActiveButton(buttonType) {
-  isActive.value = buttonType;
+  activeTab.value = buttonType;
 }
 </script>
 

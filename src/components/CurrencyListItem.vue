@@ -50,16 +50,11 @@ function changeCurrency() {
   display: flex;
   align-items: center;
   font-size: 20px;
-  .main {
-    margin-right: 5px;
-  }
-  .sub {
-    margin-left: 5px;
-  }
 
   .value-status-up {
     color: green;
   }
+
   .value-status-down {
     color: red;
   }
@@ -72,7 +67,7 @@ function changeCurrency() {
     padding: 6px 10px;
     font-size: 18px;
     line-height: 22px;
-    margin: 0 5px;
+    margin: 0 10px;
     cursor: pointer;
     &:hover {
       background-color: #605f5f;
