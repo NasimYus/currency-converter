@@ -12,11 +12,16 @@
     <h1>Список валют</h1>
     <div v-if="loading">Загрузка...</div>
     <div v-else>
-      <ul v-for="valute in currencyList.Valute" :key="valute.ID">
-        <li>
-          <currency-list-item :valute="valute" />
-        </li>
-      </ul>
+      <div v-if="currencyList && currencyList.Valute.length">
+        <ul v-for="valute in currencyList.Valute" :key="valute.ID">
+          <li>
+            <currency-list-item :valute="valute" />
+          </li>
+        </ul>
+      </div>
+      <div class="empty-data" v-else>
+        <span>Нет данных</span>
+      </div>
     </div>
   </section>
 </template>
@@ -28,7 +33,6 @@ import { useStore } from "vuex";
 const store = useStore();
 
 const searchText = ref("");
-const currencyListCopy = ref([]);
 const currencyList = ref([]);
 
 const loading = computed(() => {
@@ -40,20 +44,9 @@ const storeCurrencyList = computed(() => {
 });
 
 watch(
-  currencyList,
-  (value) => {
-    if (!value?.Value?.length && !searchText.value.length) {
-      currencyList.value = JSON.parse(JSON.stringify(storeCurrencyList.value));
-    }
-  },
-  { immediate: true }
-);
-
-watch(
   storeCurrencyList,
   (value) => {
-    currencyList.value = value;
-    currencyListCopy.value = JSON.parse(JSON.stringify(currencyList.value));
+    currencyList.value = JSON.parse(JSON.stringify(value));
   },
   { immediate: true }
 );
@@ -62,7 +55,7 @@ watch(
   () => searchText.value,
   debounce(() => {
     if (!searchText.value.length) {
-      currencyList.value = JSON.parse(JSON.stringify(currencyListCopy.value));
+      currencyList.value = JSON.parse(JSON.stringify(storeCurrencyList.value));
     } else {
       currencyList.value.Valute = currencyList.value.Valute.filter((valute) => {
         return valute.CharCode.toLowerCase().includes(
@@ -82,6 +75,7 @@ const CurrencyListItem = defineAsyncComponent(() =>
 .currency-list {
   .search-text {
     font-size: 20px;
+
     input {
       border: 1px solid #e5eaef;
       outline: 0;
@@ -95,15 +89,23 @@ const CurrencyListItem = defineAsyncComponent(() =>
       color: #222222;
     }
   }
+
   h1 {
     margin-top: 15px;
     margin-bottom: 5px;
   }
+
   ul {
     list-style-type: none;
+
     li {
       padding: 8px 0;
     }
+  }
+
+  .empty-data {
+    text-align: start;
+    color: #73787d;
   }
 }
 </style>
